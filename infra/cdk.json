@@ -1,0 +1,22 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "context": {
+    "hostedZoneName": "coplists.com",
+    "environments": {
+      "dev": {
+        "domainName": "dev.coplists.com",
+        "emailFromAddress": "invites@dev.coplists.com",
+        "authDomainPrefix": "coplist-dev",
+        "apiThrottle": {
+          "rateLimit": 10,
+          "burstLimit": 20
+        },
+        "monthlyBudgetUsd": 10
+      }
+    },
+    "pipeline": {
+      "repo": "keitheasterbrook/coplist",
+      "branch": "main"
+    }
+  }
+}
