@@ -15,7 +15,7 @@
       }
     },
     "pipeline": {
-      "repo": "keitheasterbrook/coplist",
+      "repo": "keitheasterbrook/coplists",
       "branch": "main"
     }
   }

@@ -1,5 +1,5 @@
 {
-  "name": "coplist",
+  "name": "coplists",
   "private": true,
   "workspaces": [
     "apps/*",
