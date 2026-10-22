@@ -26,15 +26,18 @@ export class DevOpsStack extends Stack {
     // Created by hand: the ARN contains the account ID and region.
     const connectionArn = ssm.StringParameter.valueForStringParameter(this, PIPELINE_CONNECTION_ARN_PARAMETER);
 
+    const source = pipelines.CodePipelineSource.connection(config.pipeline.repo, config.pipeline.branch, {
+      connectionArn,
+    });
+    // CodeBuild images ship `n`; pin Node to .nvmrc's major version.
+    const installNode = 'n $(cat .nvmrc)';
+
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       crossAccountKeys: false,
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
-        // CodeBuild images ship `n`; pin Node to .nvmrc's major version.
-        installCommands: ['n $(cat .nvmrc)'],
-        input: pipelines.CodePipelineSource.connection(config.pipeline.repo, config.pipeline.branch, {
-          connectionArn,
-        }),
+        installCommands: [installNode],
+        input: source,
         commands: [
           'npm ci',
           'npm run build',
@@ -57,11 +60,14 @@ export class DevOpsStack extends Stack {
     const siteUrl = `https://${config.environment.domainName}`;
     pipeline.addStage(stage, {
       post: [
-        // Replace with the Playwright suite once apps/web exists (needs the E2E test users, AUTH-01).
-        new pipelines.ShellStep('SmokeTest', {
+        new pipelines.ShellStep('E2E', {
+          input: source,
+          installCommands: [installNode],
+          env: { CI: 'true', E2E_BASE_URL: siteUrl },
           commands: [
-            `curl -fsS ${siteUrl}/ > /dev/null`,
-            `curl -fsS ${siteUrl}/api/health`,
+            'npm ci',
+            'npx -w apps/web playwright install --with-deps chromium',
+            'npm run test:e2e -w apps/web',
           ],
         }),
       ],

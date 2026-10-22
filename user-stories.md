@@ -62,7 +62,7 @@ Every signed-in person is a **user**. Any user can create a list. A user's role 
 ## Epic: Setup
 
 ### SETUP-01 Scaffold the project and pipeline
-**Status:** Ready · **Priority:** MVP
+**Status:** In Progress · **Priority:** MVP
 As the developer, I want the repository, infrastructure, and pipeline in place so that every later story only adds features.
 - The repository matches the layout in CLAUDE.md: root `package.json` with npm workspaces, `apps/web`, `services/api`, `packages/shared`, `infra`, one `package-lock.json`, and `.nvmrc` pinning Node.js 24.
 - From the repo root, `npm run lint`, `npm run typecheck`, and `npm test` run in every workspace and pass; each workspace has at least one test.
