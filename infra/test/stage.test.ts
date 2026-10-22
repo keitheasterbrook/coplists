@@ -9,6 +9,21 @@ describe('AppStage', () => {
     templateOf(stage.certStack).resourceCountIs('AWS::CertificateManager::Certificate', 1);
   });
 
+  it('names every stack <env>-coplists-<name>', () => {
+    expect(
+      [stage.certStack, stage.dataStack, stage.monitoringStack, stage.authStack, stage.emailStack, stage.apiStack, stage.webStack]
+        .map((stack) => stack.stackName),
+    ).toEqual([
+      'test-coplists-CertStack',
+      'test-coplists-DataStack',
+      'test-coplists-MonitoringStack',
+      'test-coplists-AuthStack',
+      'test-coplists-EmailStack',
+      'test-coplists-ApiStack',
+      'test-coplists-WebStack',
+    ]);
+  });
+
   it('never creates a hosted zone', () => {
     for (const stack of [stage.certStack, stage.apiStack, stage.webStack, stage.emailStack]) {
       templateOf(stack).resourceCountIs('AWS::Route53::HostedZone', 0);

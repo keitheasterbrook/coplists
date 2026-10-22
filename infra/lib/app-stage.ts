@@ -8,6 +8,7 @@ import { CLOUDFRONT_CERT_REGION } from './constants.js';
 import { DataStack } from './data-stack.js';
 import { EmailStack } from './email-stack.js';
 import { MonitoringStack } from './monitoring-stack.js';
+import { stackName } from './stack-name.js';
 import { WebStack } from './web-stack.js';
 
 export interface AppStageProps extends StageProps {
@@ -33,19 +34,22 @@ export class AppStage extends Stage {
     const env = { account: this.account, region: this.region };
 
     this.certStack = new CertStack(this, 'CertStack', {
+      stackName: stackName(config.envName, 'CertStack'),
       env: { account: this.account, region: CLOUDFRONT_CERT_REGION },
       domainName: config.domainName,
       hostedZoneName,
     });
 
-    this.dataStack = new DataStack(this, 'DataStack', { env });
+    this.dataStack = new DataStack(this, 'DataStack', { env, stackName: stackName(config.envName, 'DataStack') });
 
     this.monitoringStack = new MonitoringStack(this, 'MonitoringStack', {
+      stackName: stackName(config.envName, 'MonitoringStack'),
       env,
       monthlyBudgetUsd: config.monthlyBudgetUsd,
     });
 
     this.authStack = new AuthStack(this, 'AuthStack', {
+      stackName: stackName(config.envName, 'AuthStack'),
       env,
       table: this.dataStack.table,
       domainName: config.domainName,
@@ -54,6 +58,7 @@ export class AppStage extends Stage {
     });
 
     this.emailStack = new EmailStack(this, 'EmailStack', {
+      stackName: stackName(config.envName, 'EmailStack'),
       env,
       domainName: config.domainName,
       hostedZoneName,
@@ -61,6 +66,7 @@ export class AppStage extends Stage {
     });
 
     this.apiStack = new ApiStack(this, 'ApiStack', {
+      stackName: stackName(config.envName, 'ApiStack'),
       env,
       domainName: config.domainName,
       hostedZoneName,
@@ -76,6 +82,7 @@ export class AppStage extends Stage {
     });
 
     this.webStack = new WebStack(this, 'WebStack', {
+      stackName: stackName(config.envName, 'WebStack'),
       env,
       domainName: config.domainName,
       hostedZoneName,

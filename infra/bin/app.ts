@@ -3,6 +3,7 @@ import { App } from 'aws-cdk-lib';
 import { loadConfig } from '../lib/config.js';
 import { PLACEHOLDER_SITE_DIR, WEB_DIST_DIR } from '../lib/constants.js';
 import { DevOpsStack } from '../lib/devops-stack.js';
+import { stackName } from '../lib/stack-name.js';
 
 const app = new App();
 const config = loadConfig(app);
@@ -15,6 +16,7 @@ if (!account || !region) {
 }
 
 new DevOpsStack(app, 'DevOpsStack', {
+  stackName: stackName(config.environment.envName, 'DevOpsStack'),
   env: { account, region },
   config,
   webAssetPath: existsSync(WEB_DIST_DIR) ? WEB_DIST_DIR : PLACEHOLDER_SITE_DIR,

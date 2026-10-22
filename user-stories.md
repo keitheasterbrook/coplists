@@ -70,7 +70,7 @@ As the developer, I want the repository, infrastructure, and pipeline in place s
 - `cdk synth --context env=dev` succeeds, and fails with a clear message when `env` is missing or unknown or when `CDK_DEFAULT_ACCOUNT` / `CDK_DEFAULT_REGION` are unset.
 - `DevOpsStack` holds the pipeline; its dev Stage deploys `WebStack` and `ApiStack`. `DataStack` comes in SETUP-02, `MonitoringStack` in SETUP-03, `AuthStack` in AUTH-01, `EmailStack` in SHARE-01, `CertStack` in SETUP-04. There is no `DnsStack` (CLAUDE.md, Domains).
 - `infra/test` has snapshot tests for every stack, built with the fake env from CLAUDE.md.
-- The one-time manual steps (bootstrap in both regions, the CodeConnections connection, the `/coplist/pipeline/connection-arn` parameter, first `cdk deploy DevOpsStack`) are written in `README.md` without account IDs, ARNs, or region names.
+- The one-time manual steps (bootstrap in both regions, the CodeConnections connection, the `/coplists/pipeline/connection-arn` parameter, first `cdk deploy DevOpsStack`) are written in `README.md` without account IDs, ARNs, or region names.
 - After those steps, pushing to `main` deploys dev: the CloudFront URL serves the placeholder page and `/api/health`, and the pipeline's E2E post step runs a smoke test of both at 360 px and desktop widths.
 
 ### SETUP-02 Design the data model
@@ -102,15 +102,15 @@ As the developer, I want the DynamoDB design agreed before any data is stored so
 As the product owner, I want the API throttled and watched, and a cost alert on the account, so that abuse or a bug can't quietly run up the bill.
 - The API stage has a default throttle from `context.environments.<env>.apiThrottle` in `infra/cdk.json` (dev: 10 requests/second, burst 20). Requests over the limit get 429.
 - API access logs go to CloudWatch Logs with one-week retention; Lambda logs also have one-week retention.
-- `MonitoringStack` creates an SNS topic that emails the address in the SSM parameter `/coplist/alerts/email`, and a monthly AWS Budgets cost budget of `monthlyBudgetUsd` (dev: $10) that emails at 80% of actual and 100% of forecast spend.
+- `MonitoringStack` creates an SNS topic that emails the address in the SSM parameter `/coplists/alerts/email`, and a monthly AWS Budgets cost budget of `monthlyBudgetUsd` (dev: $10) that emails at 80% of actual and 100% of forecast spend.
 - CloudWatch alarms notify the SNS topic when, over 5 minutes: the API returns any 5xx, the API returns 50 or more 4xx (this includes 429s), any Lambda invocation errors, or any Lambda invocation is throttled.
-- Creating `/coplist/alerts/email` and confirming the SNS subscription email are added to the manual steps in `README.md`.
+- Creating `/coplists/alerts/email` and confirming the SNS subscription email are added to the manual steps in `README.md`.
 - `infra/test` has assertion tests for the throttle settings, log retention, alarms, and budget.
 
 ### SETUP-04 Custom domains
 **Status:** Ready · **Priority:** MVP
 As the product owner, I want the app on its own domain, with the API reachable only at its own domain, so that the app has one public address and the default AWS endpoint can't be used.
-- The one-time manual steps in `README.md` cover registering `coplists.com` with Route 53 Domains and creating the `/coplist/dns/hosted-zone-id` parameter in both the profile's region and us-east-1. CDK never creates or deletes the hosted zone.
+- The one-time manual steps in `README.md` cover registering `coplists.com` with Route 53 Domains and creating the `/coplists/dns/hosted-zone-id` parameter in both the profile's region and us-east-1. CDK never creates or deletes the hosted zone.
 - `CertStack` issues the certificate for `dev.coplists.com` in us-east-1 (CLAUDE.md). CloudFront serves the site at `https://dev.coplists.com`, with TLS 1.2 minimum, and `WebStack` creates the site's DNS alias records.
 - The HTTP API is served at `api.dev.coplists.com`, with a regional ACM certificate and TLS 1.2 minimum. Its default `execute-api` endpoint is disabled, and CloudFront's `/api/*` origin is this custom domain.
 - The site's URLs everywhere come from `domainName` in `infra/cdk.json` (CLAUDE.md, Domains).
@@ -335,7 +335,7 @@ As a user, I want my own account so that my lists are private and available on a
 - `getUserId` returns the token's `sub` claim. Verifying an account creates its user record (post-confirmation trigger), with no system admin rights and no lists.
 - `AuthStack` is added as described in CLAUDE.md. Its callback URLs use `https://dev.coplists.com` (from `domainName`, SETUP-04); the dev app client also allows `http://localhost:5173`.
 - The web app reads the Cognito settings from `/config.json` (CLAUDE.md), not from its build.
-- A script creates the E2E test users, with their user records (the post-confirmation trigger doesn't run for admin-created users), and stores their credentials as `SecureString` parameters under `/coplist/<env>/e2e/`; it's added to the manual steps in `README.md`. The E2E suite signs in as one of them, and includes a signed-in `GET` request through CloudFront to confirm the `Authorization` header reaches the API.
+- A script creates the E2E test users, with their user records (the post-confirmation trigger doesn't run for admin-created users), and stores their credentials as `SecureString` parameters under `/coplists/<env>/e2e/`; it's added to the manual steps in `README.md`. The E2E suite signs in as one of them, and includes a signed-in `GET` request through CloudFront to confirm the `Authorization` header reaches the API.
 
 ## Epic: Sharing
 

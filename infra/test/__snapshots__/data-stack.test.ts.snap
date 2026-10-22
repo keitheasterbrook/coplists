@@ -5,7 +5,7 @@ exports[`SETUP-02 DataStack > matches the table snapshot 1`] = `
   "Outputs": {
     "ExportsOutputFnGetAttTableCD117FA1ArnE2C8C204": {
       "Export": {
-        "Name": "test-DataStack:ExportsOutputFnGetAttTableCD117FA1ArnE2C8C204",
+        "Name": "test-coplists-DataStack:ExportsOutputFnGetAttTableCD117FA1ArnE2C8C204",
       },
       "Value": {
         "Fn::GetAtt": [
@@ -16,7 +16,7 @@ exports[`SETUP-02 DataStack > matches the table snapshot 1`] = `
     },
     "ExportsOutputFnGetAttTableCD117FA1StreamArnB270E65B": {
       "Export": {
-        "Name": "test-DataStack:ExportsOutputFnGetAttTableCD117FA1StreamArnB270E65B",
+        "Name": "test-coplists-DataStack:ExportsOutputFnGetAttTableCD117FA1StreamArnB270E65B",
       },
       "Value": {
         "Fn::GetAtt": [
@@ -27,7 +27,7 @@ exports[`SETUP-02 DataStack > matches the table snapshot 1`] = `
     },
     "ExportsOutputRefTableCD117FA1D18A8047": {
       "Export": {
-        "Name": "test-DataStack:ExportsOutputRefTableCD117FA1D18A8047",
+        "Name": "test-coplists-DataStack:ExportsOutputRefTableCD117FA1D18A8047",
       },
       "Value": {
         "Ref": "TableCD117FA1",

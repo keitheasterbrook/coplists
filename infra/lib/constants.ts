@@ -4,9 +4,9 @@ import { fileURLToPath } from 'node:url';
 // CloudFront only accepts ACM certificates from us-east-1. The only region name allowed in the repo.
 export const CLOUDFRONT_CERT_REGION = 'us-east-1';
 
-export const HOSTED_ZONE_ID_PARAMETER = '/coplist/dns/hosted-zone-id';
-export const PIPELINE_CONNECTION_ARN_PARAMETER = '/coplist/pipeline/connection-arn';
-export const ALERTS_EMAIL_PARAMETER = '/coplist/alerts/email';
+export const HOSTED_ZONE_ID_PARAMETER = '/coplists/dns/hosted-zone-id';
+export const PIPELINE_CONNECTION_ARN_PARAMETER = '/coplists/pipeline/connection-arn';
+export const ALERTS_EMAIL_PARAMETER = '/coplists/alerts/email';
 
 export const API_SCOPE = 'coplist/api';
 export const RESOURCE_SERVER_ID = 'coplist';
