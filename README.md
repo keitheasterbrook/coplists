@@ -50,7 +50,7 @@ export CERT_REGION=<CLOUDFRONT_CERT_REGION from infra/lib/constants.ts>
    npx cdk bootstrap --profile $PROFILE
    npx cdk bootstrap aws://$ACCOUNT_ID/$CERT_REGION --profile $PROFILE
    ```
-5. **GitHub connection.** In the console (Developer Tools → Settings → Connections), create a GitHub connection to the repository in `context.pipeline`, and complete the authorization so its status is Available. Store its ARN:
+5. **GitHub connection.** In the CodePipeline console (Settings → Connections, in the profile's region), create a GitHub connection to the repository in `context.pipeline`, and complete the authorization so its status is Available. Store its ARN:
    ```sh
    aws ssm put-parameter --name /coplists/pipeline/connection-arn --type String --value <connection ARN> --profile $PROFILE
    ```
