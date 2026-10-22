@@ -15,12 +15,15 @@ describe('SETUP-01 DevOpsStack', () => {
     },
     webAssetPath: PLACEHOLDER_SITE_DIR,
   });
-  const projects = Object.values(templateOf(stack).findResources('AWS::CodeBuild::Project')).map((project) =>
-    JSON.stringify(project.Properties),
-  );
+  const projectResources = templateOf(stack).findResources('AWS::CodeBuild::Project');
+  const projects = Object.values(projectResources).map((project) => JSON.stringify(project.Properties));
 
   it('builds every workspace before synth', () => {
     expect(projects.some((project) => project.includes('npm run build') && project.includes('cdk synth --context env=test'))).toBe(true);
+  });
+
+  it('publishes assets from one CodeBuild project, not one per asset', () => {
+    expect(Object.keys(projectResources).filter((id) => id.startsWith('PipelineAssets'))).toHaveLength(1);
   });
 
   it('runs the Playwright E2E suite against the deployed site after the stage deploys', () => {

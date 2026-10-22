@@ -35,6 +35,8 @@ export class DevOpsStack extends Stack {
     const pipeline = new pipelines.CodePipeline(this, 'Pipeline', {
       crossAccountKeys: false,
       selfMutation: true,
+      // One CodeBuild project per asset (40+) exceeds the account's CodeBuild queue limit of 15.
+      publishAssetsInParallel: false,
       synth: new pipelines.ShellStep('Synth', {
         installCommands: [installNode],
         input: source,
